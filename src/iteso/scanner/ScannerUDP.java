@@ -29,9 +29,7 @@ public class ScannerUDP extends Scanner {
                 DatagramPacket receive = new DatagramPacket(recibido, recibido.length);
                 socket.receive(receive);
                 System.out.println(receive);
-                if(packet.getData() != null) {
-                    return true;
-                }
+                return true;
             } catch (Exception e) {
             }
         }
