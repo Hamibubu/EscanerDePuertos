@@ -8,6 +8,7 @@ public class HilosTCP{
     // Seteamos las variables
     private int numHilos;
     private ScannerTCP[] scanners;
+    private boolean cancel = false;
     // Método para calcular el número de hilos por rango de puerto
     public HilosTCP(String direccionip, int puertoinicio, int puertofinal){
         // Obtenemos hilos diponibles
@@ -24,11 +25,17 @@ public class HilosTCP{
             fin = inicio + numPuertosPorHilo - 1;
         }
     }
+    public ScannerTCP[] getScanners(){
+        return scanners;
+    }
+    public int getNumHilos(){
+        return numHilos;
+    }
     // Método para realizar el escaneo
     public ArrayList<Integer> scan() throws InterruptedException {
+        Thread[] threads = new Thread[numHilos];
         // Array para guardar los puertos
         ArrayList<Integer> puertosAbiertos = new ArrayList<>();
-        Thread[] threads = new Thread[numHilos];
         // Creamos los hilos
         for (int i = 0; i < numHilos; i++) {
             // fi es para que sea estable
@@ -39,6 +46,9 @@ public class HilosTCP{
         }
         // Esperamos a que los hilos terminen
         for (Thread thread : threads) {
+            if(cancel){
+                thread.interrupt();
+            }
             // Esperamos a que acaben
             thread.join();
         }
@@ -61,5 +71,8 @@ public class HilosTCP{
                 puertosAbiertos.addAll(resultado);
             }
         }
+    }
+    public void cancel(){
+        this.cancel = true;
     }
 }
