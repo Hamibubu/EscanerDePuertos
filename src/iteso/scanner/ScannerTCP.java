@@ -16,7 +16,7 @@ public class ScannerTCP extends ScannerHilo {
             // Creamos el socket
             Socket socket = new Socket();
             // Intentamos conectarnos
-            socket.connect(new InetSocketAddress(direccionip,puerto),20);
+            socket.connect(new InetSocketAddress(direccionip,puerto),50);
             // Cerramos el socket
             socket.close();
             return true;
