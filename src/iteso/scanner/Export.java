@@ -15,7 +15,7 @@ public class Export {
         JSONObject json = new JSONObject();
         // Agregamos el mapa
         json.putAll(mapa);
-        String ipR = "Resultados para "+ip+":\n";
+        String ipR = "\nResultados para "+ip+":\n";
         // Escribimos
         FileWriter arch = new FileWriter(nombre_arch,true);
         arch.write(ipR + JSONValue.toJSONString(json));
@@ -31,7 +31,7 @@ public class Export {
         for (int item : arr) {
             jsonarr.add(item);
         }
-        String ipR = "Resultados para "+ip+":\n";
+        String ipR = "\nResultados para "+ip+":\n";
         // Guardamos
         json.put("puertos", jsonarr);
         // Escribir el objeto JSON en un archivo

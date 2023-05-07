@@ -1,0 +1,7 @@
+.scroll-bar {
+    -fx-background-color: #2c3639;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #2c3639;
+}
