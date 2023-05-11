@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 // Agregamos las demás librerías necesarias
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -24,11 +26,12 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.concurrent.Task;
+import javafx.util.Duration;
 
 public class ScannerPuertosPOO extends Application {
 
     public static void main(String[] args) {
-        // Encapsulamos todo en en launch
+        // Encapsulamos
         launch(args);
     }
 
@@ -44,6 +47,7 @@ public class ScannerPuertosPOO extends Application {
         primaryStage.setHeight(750);
         // Tamaños
         primaryStage.setResizable(false);
+
 
         //Rectangulo titulo
         Rectangle backgroundTitulo = new Rectangle(440, 90);
@@ -63,6 +67,13 @@ public class ScannerPuertosPOO extends Application {
         background2.setArcWidth(20); // Redondear los bordes horizontalmente
         background2.setArcHeight(20); // Redondear los bordes verticalmente
         background2.setTranslateY(95);
+
+        //Rectangulo exportado
+        Rectangle background3 = new Rectangle(390, 75);
+        background3.setFill(Color.web("#1f2628"));
+        background3.setArcWidth(20); // Redondear los bordes horizontalmente
+        background3.setArcHeight(20); // Redondear los bordes verticalmente
+        background3.setTranslateY(299);
 
         // Separadores para acomodar los botones
         Separator separator = new Separator();
@@ -151,6 +162,20 @@ public class ScannerPuertosPOO extends Application {
         labelnombrearch.setTextFill(Color.WHITE);
         labelnombrearch.setVisible(false);
 
+        //Label exportado correctamente
+        Label icoExportado = new Label("[ ! ] ");
+        icoExportado.setFont(font);
+        icoExportado.setTextFill(Color.web("#28982c"));
+        icoExportado.setVisible(false);
+        Label exportadoCorrectamente = new Label("Escaneo exportado exitosamente!");
+        exportadoCorrectamente.setFont(font);
+        exportadoCorrectamente.setTextFill(Color.web("#4da6ff"));
+        exportadoCorrectamente.setVisible(false);
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
+            icoExportado.setVisible(false);
+            exportadoCorrectamente.setVisible(false);
+        }));
+
         //textfield Exportar
         TextField textFieldExportar = new TextField();
         textFieldExportar.setText("Ejemplo.txt");
@@ -205,17 +230,19 @@ public class ScannerPuertosPOO extends Application {
         Region espacio = new Region();
         espacio.setPrefHeight(30);
         Region espacio2 = new Region();
-        espacio2.setPrefHeight(10);
+        espacio2.setPrefHeight(25);
         VBox vbox2 = new VBox(espacio);
         Region espacio3 = new Region();
         espacio3.setPrefHeight(0);
         VBox vbox3 = new VBox(labelResultados, resultado);
         HBox hbox2 = new HBox(exportar, btnCopiar, btnLimpiar);
         hbox2.setSpacing(10);
+        HBox hbox3 = new HBox(icoExportado, exportadoCorrectamente);
+        hbox3.setSpacing(0);
 
         //Box completa
         StackPane.setAlignment(imageView, javafx.geometry.Pos.CENTER);
-        VBox vboxT = new VBox(separator2, imageView, separator, espacio, hboxIP, hbox0, hboxT, vbox2, espacio3, vbox3, hbox2, espacio2, hboxExport);
+        VBox vboxT = new VBox(separator2, imageView, separator, espacio, hboxIP, hbox0, hboxT, vbox2, espacio3, vbox3, hbox2, espacio2, hboxExport, hbox3);
         vboxT.setSpacing(10);
         vboxT.setPadding(new Insets(20)); //Crear margenes
 
@@ -381,6 +408,9 @@ public class ScannerPuertosPOO extends Application {
                     if (!mapaUDP.get().isEmpty()) {
                         try {
                             Export.exportaJSONDescripcion(mapaUDP.get(),textFieldExportar.getText(),textField.getText());
+                            icoExportado.setVisible(true);
+                            exportadoCorrectamente.setVisible(true);
+                            timeline.play();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -388,6 +418,9 @@ public class ScannerPuertosPOO extends Application {
                     }if (!mapaTCP.get().isEmpty()) {
                         try {
                             Export.exportaJSONDescripcion(mapaTCP.get(),textFieldExportar.getText(),textField.getText());
+                            icoExportado.setVisible(true);
+                            exportadoCorrectamente.setVisible(true);
+                            timeline.play();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -398,6 +431,9 @@ public class ScannerPuertosPOO extends Application {
                     for(ArrayList<Integer> arr : puertos){
                         try {
                             Export.exportaJSONSolo(arr,textFieldExportar.getText(),textField.getText());
+                            icoExportado.setVisible(true);
+                            exportadoCorrectamente.setVisible(true);
+                            timeline.play();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -436,7 +472,7 @@ public class ScannerPuertosPOO extends Application {
         StackPane root = new StackPane();
         root.setStyle("-fx-background-color: #2c3639;");
 
-        root.getChildren().addAll(backgroundTitulo, background, background2, vboxT);
+        root.getChildren().addAll(backgroundTitulo, background, background2, background3, vboxT);
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
